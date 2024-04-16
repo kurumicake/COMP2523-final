@@ -18,3 +18,6 @@ async function main() {
   }
   
   main();
+
+
+  // data reading is not working as planned for some reason, was trying to isolate it in its own class. 
