@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import { Inhabitant } from "../interfaces/IInhabitant";
 import { IClinic } from "../interfaces/IClinic";
+import { IData } from "../interfaces/IData";
 
 export class Map {
   private _mapData: any;
@@ -8,13 +9,21 @@ export class Map {
   constructor() {}
 
  
-  // async loadData(fileName: string): Promise<void> {
-  //   const data = await fs.readFile(fileName, 'utf8');
-  //   this._mapData = JSON.parse(data.toString());
-  // }
+  async loadData(fileName: string): Promise<void> {
+    try {
+      const data = await fs.readFile(fileName, 'utf8');
+      this._mapData = JSON.parse(data);
+    } catch (error) {
+      console.error("Failed to load or parse data:", error);
+      this._mapData = undefined;
+    }
+  }
+
+  getData(): any {
+    return this._mapData;
+  }
 
   printMap() {
-    //! not sure why data is not loading properly.
     if (!this._mapData) {
       console.log("Data is not loaded yet.");
       return;
@@ -38,7 +47,7 @@ export class Map {
     console.log(mapRows.join('\n'));
   }
 
-  // Registers eligible individuals for vaccination
+  // Registers eligible individuals for vaccination, filter out each individual
   registerForShots(currentIntake: number) {
     if (!this._mapData) {
       console.log("Data is not loaded yet.");

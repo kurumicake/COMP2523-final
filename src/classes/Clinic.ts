@@ -13,8 +13,21 @@ export class Clinic {
 
     // ! Getting the queue from outside of the Clinic class
     public getQueue(): Inhabitant[] {
-        return this.queue;
+        if (!Array.isArray(this.queue)) {
+            console.error("Queue was uninitialized.");
+            this.queue = [];
+        }
+        return this.queue.slice(); 
       }
+
+      public setQueue(queue: Inhabitant[]): void {
+        if (Array.isArray(queue)) {
+            this.queue = queue;
+        } else {
+            console.error("Invalid queue");
+            this.queue = [];
+        }
+    }
 
     // Adds a person to the queue
     enqueue(person: Inhabitant): void {
@@ -24,7 +37,8 @@ export class Clinic {
     // Remove a person from the queue
     dequeue(): Inhabitant | undefined {
         if (this.queue.length > 0) {
-            return this.queue.shift();
+            const person = this.queue.shift();
+            return person;
         } else {
             console.log("No one is in the queue.");
             return undefined;
@@ -33,12 +47,17 @@ export class Clinic {
 
     // Check the number of people in the queue
     size(): number {
+        if (!Array.isArray(this.queue)) {
+            console.error("Queue is not properly initialized.", this);
+            this.queue = []; 
+        }
         return this.queue.length;
     }
 
     // Returns the average wait time based on the number of people in the queue
     getCurrentWaitTime(): number {
         const waitTimePerPerson = 15; // 15 minutes per person
-        return this.size() * waitTimePerPerson;
+        const totalWaitTime = this.size() * waitTimePerPerson;
+        return totalWaitTime;
     }
 }
